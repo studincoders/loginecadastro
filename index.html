@@ -1,59 +1,101 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title>Login & Cadastro | StudIn</title>
-    <link rel="stylesheet" href="style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>
-    <div class="wrapper">
-      <div class="title-text">
-        <div class="title login">Login </div>
-        <div class="title signup">Cadastro</div>
+<head>
+  <meta charset="utf-8">
+  <title>Login & Cadastro | StudIn</title>
+  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <div class="wrapper">
+    <div class="title-text">
+      <div class="title login">Login </div>
+      <div class="title signup">Cadastro</div>
+    </div>
+    <div class="form-container">
+      <div class="slide-controls">
+        <input type="radio" name="slide" id="login" checked>
+        <input type="radio" name="slide" id="signup">
+        <label for="login" class="slide login">Login</label>
+        <label for="signup" class="slide signup">Cadastro</label>
+        <div class="slider-tab"></div>
       </div>
-      <div class="form-container">
-        <div class="slide-controls">
-          <input type="radio" name="slide" id="login" checked>
-          <input type="radio" name="slide" id="signup">
-          <label for="login" class="slide login">Login</label>
-          <label for="signup" class="slide signup">Cadastro</label>
-          <div class="slider-tab"></div>
-        </div>
-        <div class="form-inner">
-          <form action="#" class="login">
-            <div class="field">
-              <input type="text" placeholder="Email Address" required>
-            </div>
-            <div class="field">
-              <input type="password" placeholder="Password" required>
-            </div>
-            <div class="field btn">
-              <div class="btn-layer"></div>
-              <input type="submit" value="Login">
-            </div>
-            <div class="signup-link">Não possui Conta? <a href="">Cadastre-se</a></div>
-          </form>
-          <form action="#" class="signup">
-            <div class="field">
-              <input type="text" placeholder="Email Address" required>
-            </div>
-            <div class="field">
-              <input type="password" placeholder="Password" required>
-            </div>
-            <div class="field">
-              <input type="password" placeholder="Confirm password" required>
-            </div>
-            <div class="field btn">
-              <div class="btn-layer"></div>
-              <input type="submit" value="Cadastrar">
-            </div>
-          </form>
-        </div>
+      <div class="form-inner">
+        <!-- Formulário de login -->
+        <form action="#" class="login" id="loginForm">
+          <div class="field">
+            <input type="text" placeholder="Email Address" name="email" required>
+          </div>
+          <div class="field">
+            <input type="password" placeholder="Password" name="password" required>
+          </div>
+          <div class="field btn">
+            <div class="btn-layer"></div>
+            <input type="submit" value="Login">
+          </div>
+          <div class="signup-link">Não possui Conta? <a href="#">Cadastre-se</a></div>
+        </form>
+        <!-- Formulário de cadastro -->
+        <form action="#" class="signup" id="signupForm">
+          <div class="field">
+            <input type="text" placeholder="Nome" name="nome" required>
+          </div>
+          <div class="field">
+            <input type="text" placeholder="Sobrenome" name="sobrenome" required>
+          </div>
+          <div class="field">
+            <input type="text" placeholder="Email Address" name="email" required>
+          </div>
+          <div class="field">
+            <input type="password" placeholder="Password" name="password" required>
+          </div>
+          <div class="field">
+            <input type="password" placeholder="Confirm password" name="confirmPassword" required>
+          </div>
+          <div class="field btn">
+            <div class="btn-layer"></div>
+            <input type="submit" value="Cadastrar">
+          </div>
+        </form>
       </div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
+  <!-- Adicionando script para lidar com as solicitações HTTP -->
+  <script>
+    // Função para enviar solicitação HTTP POST ao backend
+    function enviarSolicitacao(url, data, callback) {
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => response.json())
+      .then(callback)
+      .catch(error => console.error('Erro ao enviar solicitação:', error));
+    }
 
-  </body>
+    // Manipulador de eventos para o envio do formulário de login
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Impede o envio do formulário padrão
+      const formData = new FormData(this); // Obtém os dados do formulário
+      const data = Object.fromEntries(formData.entries()); // Converte para objeto JSON
+      enviarSolicitacao('/usuarios/login', data, function(response) {
+        console.log('Resposta do backend:', response); // Exibe a resposta do backend no console
+      });
+    });
+
+    // Manipulador de eventos para o envio do formulário de cadastro
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Impede o envio do formulário padrão
+      const formData = new FormData(this); // Obtém os dados do formulário
+      const data = Object.fromEntries(formData.entries()); // Converte para objeto JSON
+      enviarSolicitacao('/usuarios/cadastrar', data, function(response) {
+        console.log('Resposta do backend:', response); // Exibe a resposta do backend no console
+      });
+    });
+  </script>
+</body>
 </html>
